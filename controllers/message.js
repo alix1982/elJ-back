@@ -52,10 +52,8 @@ module.exports.createMessage = (req, res, next) => {
       })
         .then((message) => {
           const messageRes = {
-            // snils: user.snils,
             // name: user.name,
             // password: user.password,
-            // education: user.education,
           };
           res.send(message);
         })
