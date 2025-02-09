@@ -72,19 +72,16 @@ module.exports.login = (req, res, next) => {
       if (user === null) {
         throw new NoAuthErr_401(mesErrLogin401);
       }
-      // console.log(user)
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
             throw new NoAuthErr_401(mesErrLogin401);
           }
-          // console.log(matched)
           const token = jwt.sign(
             { _id: user._id },
             NODE_ENV === 'production' ? JWT_SECRET_USER : 'some-secret-key',
             { expiresIn: '1d' },
           );
-          // console.log(token)
 
           // const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
           res.send({ token, message: mesLoginUser, userName: user.userName });
