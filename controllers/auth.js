@@ -41,6 +41,7 @@ module.exports.createUser = (req, res, next) => {
             const userRes = {
                 name: user.name,
                 userName: user.userName,
+                message: "Пользователь создан!"
               };
               res.send(userRes);
             })
