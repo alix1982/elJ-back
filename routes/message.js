@@ -4,7 +4,7 @@ const { validationRouterUpdateProgramm } = require('../validations/validationRou
 
 router.get('/message', getMessages);
 
-router.post('/message/createUser', createMessage);
+router.post('/message/createMessage', createMessage);
 
 router.patch('/message/updateMessage/:id', fixMessage);
 

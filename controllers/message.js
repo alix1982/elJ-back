@@ -34,10 +34,11 @@ module.exports.createMessage = (req, res, next) => {
   // создание сообщения
   Message.find({})
     .then((messages) => {
-      return messages[messages.length - 1].countMessage
+      return messages.length <= 0 ? 0 : messages[messages.length - 1].countMessage
       // return messages.length
     })
     .then((numberLastMessage) => {
+      console.log(numberLastMessage);
       Message.create({
         countMessage: numberLastMessage + 1,
         date: dateUnix,
