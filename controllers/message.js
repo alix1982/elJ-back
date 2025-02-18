@@ -38,18 +38,21 @@ module.exports.createMessage = (req, res, next) => {
       // return messages.length
     })
     .then((numberLastMessage) => {
-      console.log(numberLastMessage);
+      // console.log(numberLastMessage);
       Message.create({
         countMessage: numberLastMessage + 1,
-        date: dateUnix,
-        receipts, text,
-        typeMessage: {psychological: psychological, social: social, fire: fire, emergencyTrees: emergencyTrees, chemistry: chemistry},
-        textBlackList,
-        note, psd, binding, nameUser,
-        phone: {aon: phoneAON, feedback: phoneFeedback},
-        address: {city, street, house, porch, corpus, floor, flat, intercomCode},
-        typeProcessing: {typeProcessingWhom, typeProcessingHow},
-        nameUser: 'Никулин А.В.'
+        content: [{
+          date: dateUnix,
+          dateActually: Date.now(),
+          receipts, text,
+          typeMessage: {psychological: psychological, social: social, fire: fire, emergencyTrees: emergencyTrees, chemistry: chemistry},
+          textBlackList,
+          note, psd, binding, nameUser,
+          phone: {aon: phoneAON, feedback: phoneFeedback},
+          address: {city, street, house, porch, corpus, floor, flat, intercomCode},
+          typeProcessing: {typeProcessingWhom, typeProcessingHow},
+          nameUser: req.user._id
+        }],
       })
         .then((message) => {
           const messageRes = {
@@ -82,51 +85,67 @@ module.exports.fixMessage = (req, res, next) => {
     city, street, house, porch, corpus, floor, flat, intercomCode,
     typeProcessingWhom, typeProcessingHow, note, psd, binding, nameUser
   } = req.body;
-
   const dateUnix = Math.floor(new Date(`${date}, ${time}`).getTime());
+  const newMessage = {
+        date: dateUnix,
+        dateActually: Date.now(),
+        receipts: receipts,
+        text: text,
+        typeMessage: {
+          psychological: psychological,
+          social: social,
+          fire: fire,
+          emergencyTrees: emergencyTrees,
+          chemistry: chemistry
+        },
+        // textBlackList,
+        note: note,
+        psd: psd,
+        binding: binding,
+        nameUser: req.user._id,
+        phone: {aon: phoneAON, feedback: phoneFeedback},
+        address: {
+          city: city,
+          street: street,
+          house: house,
+          porch: porch,
+          corpus: corpus,
+          floor: floor,
+          flat: flat,
+          intercomCode: intercomCode
+        },
+        typeProcessing: {typeProcessingWhom: typeProcessingWhom, typeProcessingHow: typeProcessingHow},
+        // nameUser: 'ddd',
+      };
 
-  Message.findByIdAndUpdate(
+  // console.log(newMessage);
+  Message.findById(
     req.params.id,
-    {
-      date: dateUnix,
-      receipts: receipts,
-      text: text,
-      typeMessage: {
-        psychological: psychological,
-        social: social,
-        fire: fire,
-        emergencyTrees: emergencyTrees,
-        chemistry: chemistry
-      },
-      // textBlackList,
-      note: note,
-      psd: psd,
-      binding: binding,
-      // nameUser: message.nameUser,
-      phone: {aon: phoneAON, feedback: phoneFeedback},
-      address: {
-        city: city,
-        street: street,
-        house: house,
-        porch: porch,
-        corpus: corpus,
-        floor: floor,
-        flat: flat,
-        intercomCode: intercomCode
-      },
-      typeProcessing: {typeProcessingWhom: typeProcessingWhom, typeProcessingHow: typeProcessingHow},
-      nameUser: 'Никулин А.В.',
-    },
-    { new: true, runValidators: true }
+    // {content: [newMessage]},
+    // {content: [content,...newMessage]},
+    // { new: true, runValidators: true }
   )
     .then((message) => {
       if (message === null) {
         throw new NoDate_404(mesErrNoMessage404);
       }
-      res.send(message)
+
+      message.updateOne(
+        { $push: { content: newMessage }},
+        { new: true, runValidators: true }
+      )
+      .then((messegeNew) => {
+        // console.log(messegeNew)
+        if (messegeNew.acknowledged === true && messegeNew.modifiedCount > 0) {
+          res.send(messegeNew)
+        } else {
+          throw new NoDate_404(mesErrFixUpdateMessage404);
+        }
+      })
+      // res.send(message)
     })
     .catch((err) => {
-      console.log(err.name);
+      console.log(err);
       if (err.name === 'CastError') {
         next(new IncorrectData_400(mesErrIdMessage400));
         return;

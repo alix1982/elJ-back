@@ -2,11 +2,11 @@ const router = require('express').Router();
 
 const noAutorizationRouter = require('./noAutorization');
 const authRouter = require('./auth');
-// const userRouter = require('./users');
+const userRouter = require('./users');
 const messageRouter = require('./message');
 
 // const authAdmin = require('../middlewares/authAdmin');
-// const userRouterAdmin = require('./usersAdmin');
+// const users = require('./users');
 // const questionnaireRouterAdmin = require('./questionnaireAdmin');
 // const programmRouterAdmin = require('./programm');
 // const groupRouterAdmin = require('./group');
@@ -21,7 +21,7 @@ router.use(cors);
 router.use(authRouter);
 router.use(auth);
 router.use(messageRouter);
-// router.use(authAdmin);
+router.use(userRouter);
 // router.use(questionnaireRouterAdmin);
 // router.use(userRouterAdmin);
 // router.use(programmRouterAdmin);
