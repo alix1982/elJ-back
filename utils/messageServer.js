@@ -80,4 +80,7 @@ module.exports = {
   mesErrConflictMessage409: 'Сообщение с таким номером уже существует',
   mesErrIdMessage400: 'Некорректный id сообщения',
   mesErrFixUpdateMessage404: 'Ошибка измения сообщения',
+
+  // выезды
+  mesErrNoRiding404: 'Выезды не найдены',
 };

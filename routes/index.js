@@ -4,6 +4,8 @@ const noAutorizationRouter = require('./noAutorization');
 const authRouter = require('./auth');
 const userRouter = require('./users');
 const messageRouter = require('./message');
+const ridingRouter = require('./riding');
+const departureRouter = require('./departure');
 
 // const authAdmin = require('../middlewares/authAdmin');
 // const users = require('./users');
@@ -22,6 +24,9 @@ router.use(authRouter);
 router.use(auth);
 router.use(messageRouter);
 router.use(userRouter);
+router.use(ridingRouter);
+router.use(departureRouter);
+
 // router.use(questionnaireRouterAdmin);
 // router.use(userRouterAdmin);
 // router.use(programmRouterAdmin);
