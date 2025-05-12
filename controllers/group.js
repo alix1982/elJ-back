@@ -23,6 +23,10 @@ const {
   mesErrIdQuestionnaire400,
   mesErrValidationQuestionnaire400,
   mesErrConflictQuestionnaire409,
+  mesErrValidation400,
+  mesErrConflict409,
+  mesErrFixUpdate404,
+  mesErrId400,
 } = require('../utils/messageServer');
 const questionnaire = require('../models/questionnaire');
 
@@ -39,40 +43,155 @@ module.exports.getGroups = (req, res, next) => {
 };
 
 module.exports.createGroup = (req, res, next) => {
-  const { name, dateStart, dateEnd, programmName } = req.body;
+  const { nameGroup, timeStartGroup, dateStartGroup, timeEndGroup, dateEndGroup, groupDescription, elderPSG, technicPSO } = req.body;
 
-  // изменение статуса использования программы
-  Programm.findOneAndUpdate({ name: programmName }, { applies: true }, { new: true, runValidators: true }).then((prog) => {
-    if (prog === null) {
-      throw new NoDate_404(mesErrNoProgramm404);
-    }
-    Group.create({
-      name,
-      assigned: false,
-      dateStart,
-      dateEnd,
-      programm: prog,
+  const dateUnix = (date, time) => Math.floor(new Date(`${date}, ${time}`).getTime());
+
+  // создание сообщения
+  Group.find({})
+    .then((groups) => {
+      // console.log(groups);
+      // console.log(groups.length <= 0 ? 0 : groups[groups.length - 1].countGroup)
+      return groups.length <= 0 ? 0 : groups[groups.length - 1].countGroup
+      // return messages.length
     })
-      .then((group) => {
-        res.send(group);
+    .then((numberLastGroup) => {
+      // console.log(numberLastGroup);
+      Group.create({
+        countGroup: numberLastGroup + 1,
+        content: [{
+          dateActually: Date.now(),
+          nameGroup,
+          groupDescription,
+          time: {
+            dateStartGroup: dateUnix(dateStartGroup, timeStartGroup),
+            dateEndGroup: dateUnix(dateEndGroup, timeEndGroup),
+          },
+          elderPSG,
+          technicPSO,
+          nameUser: req.user._id
+        }],
       })
-      .catch((err) => {
-        console.log(err.name);
+        .then((group) => {
+          // const departureRes = {
+            // name: user.name,
+            // password: user.password,
+          // };
+          res.send(group);
+        })
+        .catch((err) => {
+          console.log(err);
 
-        if (err.name === 'ValidationError') {
-          next(new IncorrectData_400(mesErrValidationGroup400));
-          return;
-        }
-        if (err.code === 11000) {
-          next(new ConflictData_409(mesErrConflictGroup409));
-          return;
-        }
-        next(err);
-      });
-  });
+          if (err.name === 'ValidationError') {
+            next(new IncorrectData_400(mesErrValidation400));
+            return;
+          }
+          if (err.code === 11000) {
+            next(new ConflictData_409(mesErrConflict409));
+            return;
+          }
+          next(err);
+        });
+    })
+    .catch(next);
+
+
+
+  // // изменение статуса использования программы
+  // Programm.findOneAndUpdate({ name: programmName }, { applies: true }, { new: true, runValidators: true }).then((prog) => {
+  //   if (prog === null) {
+  //     throw new NoDate_404(mesErrNoProgramm404);
+  //   }
+  //   Group.create({
+  //     name,
+  //     assigned: false,
+  //     dateStart,
+  //     dateEnd,
+  //     programm: prog,
+  //   })
+  //     .then((group) => {
+  //       res.send(group);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.name);
+
+  //       if (err.name === 'ValidationError') {
+  //         next(new IncorrectData_400(mesErrValidationGroup400));
+  //         return;
+  //       }
+  //       if (err.code === 11000) {
+  //         next(new ConflictData_409(mesErrConflictGroup409));
+  //         return;
+  //       }
+  //       next(err);
+  //     });
+  // });
 };
 
-module.exports.getGroupUserData = (req, res, next) => {
+module.exports.fixGroup = (req, res, next) => {
+  const { nameGroup, timeStartGroup, dateStartGroup, timeEndGroup, dateEndGroup, groupDescription, elderPSG, technicPSO } = req.body;
+  // console.log(req.body);
+  const dateUnix = (date, time) => Math.floor(new Date(`${date}, ${time}`).getTime());
+
+  // const dateUnix = Math.floor(new Date(`${date}, ${time}`).getTime());
+
+  const newGroup = {
+    dateActually: Date.now(),
+    nameGroup,
+    groupDescription,
+    time: {
+      dateStartGroup: dateUnix(dateStartGroup, timeStartGroup),
+      dateEndGroup: dateUnix(dateEndGroup, timeEndGroup),
+    },
+    elderPSG,
+    technicPSO,
+    nameUser: req.user._id
+  };
+
+  // console.log(newMessage);
+  Group.findById(
+    req.params.id,
+    // {content: [newMessage]},
+    // {content: [content,...newMessage]},
+    // { new: true, runValidators: true }
+  )
+    .then((group) => {
+      if (group === null) {
+        throw new NoDate_404(mesErrNoGroup404);
+      }
+
+      group.updateOne(
+        { $push: { content: newGroup }},
+        { new: true, runValidators: true }
+      )
+      .then((groupNew) => {
+        // console.log(messegeNew)
+        if (groupNew.acknowledged === true && groupNew.modifiedCount > 0) {
+          res.send(groupNew)
+        } else {
+          throw new NoDate_404(mesErrFixUpdate404);
+        }
+      })
+      // res.send(message)
+    })
+    .catch((err) => {
+      console.log(err);
+      if (err.name === 'CastError') {
+        next(new IncorrectData_400(mesErrId400));
+        return;
+      }
+      if (err.name === 'TypeError') {
+        next(new NoDate_404(mesErrFixUpdate404));
+        return;
+      }
+      if (err.name === 'ValidationError') {
+        return next(new IncorrectData_400(mesErrValidation400));
+      }
+      next(err);
+    });
+};
+
+module.exports.getGroup = (req, res, next) => {
   let usersSortSnils = []; // массив со снилсами пользователей и статусом прохождения программы
   let questionnaireSortGroup = []; // массив со анкетными данными пользователей и статусом прохождения программы
   User.find({})

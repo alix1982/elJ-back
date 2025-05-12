@@ -2,30 +2,74 @@ const mongoose = require('mongoose');
 // const validator = require('validator');
 
 const groupSchema = new mongoose.Schema({
-  name: {
-    type: String,
+  countGroup: {
+    type: Number,
     required: true,
-    minlength: 2,
-    maxlength: 50,
     unique: true,
   },
-  assigned: {
-    type: Boolean,
-    required: true,
-  },
-  dateStart: {
-    type: Number,
-    required: true,
-  },
-  dateEnd: {
-    type: Number,
-    required: true,
-  },
-  programm: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'programm',
-    required: true,
-  },
+  content: [
+    {
+      dateActually: {
+        type: Number,
+        required: true,
+      },
+      nameGroup: {
+        type: String,
+        required: true,
+      },
+      time: {
+        dateStartGroup: {
+          type: Number,
+          required: true,
+        },
+        dateEndGroup: {
+          type: Number,
+          required: true,
+        },
+      },
+      groupDescription: {
+        type: String,
+      },
+      // message: {
+      //   type: Number,
+      //   required: true,
+      // },
+
+      elderPSG: [{
+        text: {
+          type: String,
+          required: true,
+        },
+        duty: {
+          type: Boolean,
+        },
+        elder: {
+          type: Boolean,
+        },
+        driver: {
+          type: Boolean,
+        },
+      }],
+      technicPSO: [{
+        text: {
+          type: String,
+        },
+        // duty: {
+        //   type: Boolean,
+        // },
+        // elder: {
+        //   type: Boolean,
+        // },
+        // driver: {
+        //   type: Boolean,
+        // },
+      }],
+      nameUser: {
+        type: String,
+        required: true,
+      }
+    }
+  ],
 });
 
 module.exports = mongoose.model('group', groupSchema);

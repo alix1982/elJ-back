@@ -6,12 +6,12 @@ const userRouter = require('./users');
 const messageRouter = require('./message');
 const ridingRouter = require('./riding');
 const departureRouter = require('./departure');
+const groupRouter = require('./group');
 
 // const authAdmin = require('../middlewares/authAdmin');
 // const users = require('./users');
 // const questionnaireRouterAdmin = require('./questionnaireAdmin');
 // const programmRouterAdmin = require('./programm');
-// const groupRouterAdmin = require('./group');
 
 const errorRouter = require('./errors');
 const auth = require('../middlewares/auth');
@@ -24,8 +24,9 @@ router.use(authRouter);
 router.use(auth);
 router.use(messageRouter);
 router.use(userRouter);
-router.use(ridingRouter);
+// router.use(ridingRouter);
 router.use(departureRouter);
+router.use(groupRouter);
 
 // router.use(questionnaireRouterAdmin);
 // router.use(userRouterAdmin);

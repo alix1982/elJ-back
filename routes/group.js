@@ -6,13 +6,15 @@ const {
   validationRouterGroupUserData,
 } = require('../validations/validationRouter');
 
-const { getGroups, createGroup, deleteGroup, getGroupUserData } = require('../controllers/group');
+const { getGroups, createGroup, deleteGroup, getGroup, fixGroup } = require('../controllers/group');
 
-router.get('/group', getGroups);
+router.get('/groups', getGroups);
 
-router.get('/group/:_id', validationRouterGroupUserData, getGroupUserData);
+router.get('/group/:_id', validationRouterGroupUserData, getGroup);
 
-router.post('/group', validationRouterCreateGroup, createGroup);
+router.post('/group', createGroup);
+
+router.patch('/group/updateGroup/:id', fixGroup);
 
 router.delete('/group/:_id', validationRouterDeleteGroup, deleteGroup);
 
