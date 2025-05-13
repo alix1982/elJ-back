@@ -43,10 +43,10 @@ module.exports.getGroups = (req, res, next) => {
 };
 
 module.exports.createGroup = (req, res, next) => {
+  // console.log('1')
   const { nameGroup, timeStartGroup, dateStartGroup, timeEndGroup, dateEndGroup, groupDescription, elderPSG, technicPSO } = req.body;
 
   const dateUnix = (date, time) => Math.floor(new Date(`${date}, ${time}`).getTime());
-
   // создание сообщения
   Group.find({})
     .then((groups) => {
