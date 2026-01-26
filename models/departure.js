@@ -14,7 +14,7 @@ const departureSchema = new mongoose.Schema({
         required: true,
       },
       team: {
-        type: Number,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
       },
       arw: {
@@ -22,10 +22,20 @@ const departureSchema = new mongoose.Schema({
         required: true,
       },
       message: {
-        type: Number,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
       },
+      applicant: {
+        type: mongoose.Schema.Types.ObjectId,
+      },
+      victim: [
+        {type: mongoose.Schema.Types.ObjectId},
+      ],
       address: {
+        city: {
+          type: String,
+          required: true,
+        },
         street: {
           type: String,
           required: true,
@@ -62,27 +72,27 @@ const departureSchema = new mongoose.Schema({
       time: {
         dateReceivingDeparture: {
           type: Number,
-          required: true,
+          // required: true,
         },
         dateTransfer: {
           type: Number,
-          required: true,
+          // required: true,
         },
         dateDeparture: {
           type: Number,
-          required: true,
+          // required: true,
         },
         dateArrival: {
           type: Number,
-          required: true,
+          // required: true,
         },
         dateEnd: {
           type: Number,
-          required: true,
+          // required: true,
         },
         dateReturn: {
           type: Number,
-          required: true,
+          // required: true,
         },
       },
       // note: {
@@ -99,23 +109,23 @@ const departureSchema = new mongoose.Schema({
       },
       reasonChallenge: {
         type: String,
-        required: true,
+        // required: true,
       },
       natureChallenge: {
         type: String,
-        required: true,
+        // required: true,
       },
       checkOutResult: {
         type: String,
-        required: true,
+        // required: true,
       },
       elderPSG: {
         type: String,
-        required: true,
+        // required: true,
       },
       textWorkDescription: {
         type: String,
-        required: true,
+        // required: true,
       },
       assistance: [{
         text: {

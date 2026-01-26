@@ -43,24 +43,25 @@ const messageSchema = new mongoose.Schema({
         // maxlength: 50,
       },
       // psychological/social/01/emergencyTrees/chemistry
+      // psychological/social/fire/emergencyTrees/chemistry
       typeMessage: {
-        psychological: {
+        criterion1: {
           type: Boolean,
           // required: true,
         },
-        social: {
+        criterion2: {
           type: Boolean,
           // required: true,
         },
-        fire: {
+        criterion3: {
           type: Boolean,
           // required: true,
         },
-        emergencyTrees: {
+        criterion4: {
           type: Boolean,
           // required: true,
         },
-        chemistry: {
+        criterion5: {
           type: Boolean,
           // required: true,
         },
@@ -145,6 +146,9 @@ const messageSchema = new mongoose.Schema({
       }
     }
   ],
+  isCreateDeparture: {
+    type: Boolean,
+  },
 }
 );
 

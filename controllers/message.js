@@ -24,10 +24,12 @@ module.exports.getMessages = (req, res, next) => {
 module.exports.createMessage = (req, res, next) => {
   const {
     date, time, receipts, phoneAON, phoneFeedback, text,
-    psychological, social, fire, emergencyTrees, chemistry, textBlackList,
+    criterion1, criterion2, criterion3, criterion4, criterion5, textBlackList,
     city, street, house, porch, corpus, floor, flat, intercomCode,
     typeProcessingWhom, typeProcessingHow, note, psd, binding, nameUser
   } = req.body;
+
+  // psychological/social/fire/emergencyTrees/chemistry
 
   const dateUnix = Math.floor(new Date(`${date}, ${time}`).getTime());
 
@@ -45,7 +47,7 @@ module.exports.createMessage = (req, res, next) => {
           date: dateUnix,
           dateActually: Date.now(),
           receipts, text,
-          typeMessage: {psychological: psychological, social: social, fire: fire, emergencyTrees: emergencyTrees, chemistry: chemistry},
+          typeMessage: {criterion1: criterion1, criterion2: criterion2, criterion3: criterion3, criterion4: criterion4, criterion5: criterion5},
           textBlackList,
           note, psd, binding, nameUser,
           phone: {aon: phoneAON, feedback: phoneFeedback},
@@ -53,6 +55,7 @@ module.exports.createMessage = (req, res, next) => {
           typeProcessing: {typeProcessingWhom, typeProcessingHow},
           nameUser: req.user._id
         }],
+        isCreateDeparture: false
       })
         .then((message) => {
           const messageRes = {
@@ -81,10 +84,13 @@ module.exports.createMessage = (req, res, next) => {
 module.exports.fixMessage = (req, res, next) => {
   const {
     date, time, receipts, phoneAON, phoneFeedback, text,
-    psychological, social, fire, emergencyTrees, chemistry, textBlackList,
+    criterion1, criterion2, criterion3, criterion4, criterion5, textBlackList,
     city, street, house, porch, corpus, floor, flat, intercomCode,
     typeProcessingWhom, typeProcessingHow, note, psd, binding, nameUser
   } = req.body;
+
+  // psychological/social/fire/emergencyTrees/chemistry
+
   const dateUnix = Math.floor(new Date(`${date}, ${time}`).getTime());
   const newMessage = {
         date: dateUnix,
@@ -92,11 +98,11 @@ module.exports.fixMessage = (req, res, next) => {
         receipts: receipts,
         text: text,
         typeMessage: {
-          psychological: psychological,
-          social: social,
-          fire: fire,
-          emergencyTrees: emergencyTrees,
-          chemistry: chemistry
+          criterion1: criterion1,
+          criterion2: criterion2,
+          criterion3: criterion3,
+          criterion4: criterion4,
+          criterion5: criterion5
         },
         // textBlackList,
         note: note,

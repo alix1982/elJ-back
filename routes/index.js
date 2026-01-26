@@ -7,6 +7,8 @@ const messageRouter = require('./message');
 const ridingRouter = require('./riding');
 const departureRouter = require('./departure');
 const groupRouter = require('./group');
+const applicantRouter = require('./applicant');
+const victimRouter = require('./victim');
 
 // const authAdmin = require('../middlewares/authAdmin');
 // const users = require('./users');
@@ -27,7 +29,8 @@ router.use(userRouter);
 // router.use(ridingRouter);
 router.use(departureRouter);
 router.use(groupRouter);
-
+router.use(applicantRouter);
+router.use(victimRouter);
 // router.use(questionnaireRouterAdmin);
 // router.use(userRouterAdmin);
 // router.use(programmRouterAdmin);
