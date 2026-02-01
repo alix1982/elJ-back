@@ -7,6 +7,10 @@ const groupSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  isDeletedGroup: {
+    type: Boolean,
+    required: true
+  },
   content: [
     {
       dateActually: {

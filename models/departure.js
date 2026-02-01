@@ -7,6 +7,15 @@ const departureSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  messageDeparture: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    unique: true,
+  },
+  isDeletedDeparture: {
+    type: Boolean,
+    required: true
+  },
   content: [
     {
       dateActually: {
@@ -17,12 +26,13 @@ const departureSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
       },
+      // arw - trafficAccident/sro/fire
       arw: {
-        type: Boolean,
-        required: true,
+        type: String,
+        enum: ['', 'дтп', 'пср', 'пожар'],
       },
       message: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Number,
         required: true,
       },
       applicant: {

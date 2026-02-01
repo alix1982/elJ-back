@@ -44,8 +44,8 @@ module.exports.getApplicants = (req, res, next) => {
 module.exports.createApplicant = (req, res, next) => {
   // console.log('1')
   const { lastname, firstname, patronymic,
-    street, house, corpus, flat,
-    blackList, reasonBlackList, infoBlackList,
+    city, street, house, corpus, flat,
+    reasonBlackList, infoBlackList,
     typeDocument, seriesDocument, numberDocument, issued, dateIssue,
     applicantDescription
   } = req.body;
@@ -63,13 +63,14 @@ module.exports.createApplicant = (req, res, next) => {
       // console.log(numberLastGroup);
       Applicant.create({
         countApplicant: numberLastApplicant + 1,
+        isDeletedApplicant: false,
         content: [{
           dateActually: Date.now(),
           lastname, firstname, patronymic,
-          street, house, corpus, flat,
-          blackList,
-          reasonBlackList: blackList ? reasonBlackList : '',
-          infoBlackList: blackList ? infoBlackList : '',
+          city, street, house, corpus, flat,
+          reasonBlackList, infoBlackList,
+          // reasonBlackList: blackList ? reasonBlackList : '',
+          // infoBlackList: blackList ? infoBlackList : '',
           typeDocument, seriesDocument, numberDocument, issued,
           dateIssue: dateUnix(dateIssue),
           applicantDescription,
@@ -102,8 +103,8 @@ module.exports.createApplicant = (req, res, next) => {
 
 module.exports.fixApplicant = (req, res, next) => {
   const { lastname, firstname, patronymic,
-    street, house, corpus, flat,
-    blackList, reasonBlackList, infoBlackList,
+    city, street, house, corpus, flat,
+    reasonBlackList, infoBlackList,
     typeDocument, seriesDocument, numberDocument, issued, dateIssue,
     applicantDescription
   } = req.body;
@@ -116,10 +117,10 @@ module.exports.fixApplicant = (req, res, next) => {
   const newApplicant = {
     dateActually: Date.now(),
     lastname, firstname, patronymic,
-    street, house, corpus, flat,
-    blackList,
-    reasonBlackList: blackList ? reasonBlackList : '',
-    infoBlackList: blackList ? infoBlackList : '',
+    city, street, house, corpus, flat,
+    reasonBlackList, infoBlackList,
+    // reasonBlackList: blackList ? reasonBlackList : '',
+    // infoBlackList: blackList ? infoBlackList : '',
     typeDocument, seriesDocument, numberDocument, issued,
     dateIssue: dateIssue ? dateUnix(dateIssue) : 0,
     applicantDescription,

@@ -59,6 +59,7 @@ module.exports.createGroup = (req, res, next) => {
       // console.log(numberLastGroup);
       Group.create({
         countGroup: numberLastGroup + 1,
+        isDeletedGroup: false,
         content: [{
           dateActually: Date.now(),
           nameGroup,

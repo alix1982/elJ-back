@@ -7,6 +7,10 @@ const victimSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  isDeletedVictim: {
+    type: Boolean,
+    required: true
+  },
   content: [
     {
       dateActually: {
@@ -35,49 +39,6 @@ const victimSchema = new mongoose.Schema({
       statusVictim: {
         type: String,
       },
-
-      // patronymic: {
-      //   type: String,
-      // },
-      // blackList: {
-      //   type: Boolean,
-      // },
-      // reasonBlackList: {
-      //   type: String,
-      // },
-      // infoBlackList: {
-      //   type: String,
-      // },
-
-      // street: {
-      //   type: String,
-      // },
-      // house: {
-      //   type: Number,
-      // },
-      // corpus: {
-      //   type: String,
-      // },
-      // flat: {
-      //   type: Number,
-      // },
-
-      // typeDocument: {
-      //   type: String,
-      // },
-      // seriesDocument: {
-      //   type: String,
-      // },
-      // numberDocument: {
-      //   type: String,
-      // },
-      // issued: {
-      //   type: String,
-      // },
-      // dateIssue: {
-      //   type: Number,
-      // },
-
       victimDescription: {
         type: String,
       },

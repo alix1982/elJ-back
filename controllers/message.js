@@ -43,6 +43,7 @@ module.exports.createMessage = (req, res, next) => {
       // console.log(numberLastMessage);
       Message.create({
         countMessage: numberLastMessage + 1,
+        isDeletedMessage: false,
         content: [{
           date: dateUnix,
           dateActually: Date.now(),

@@ -18,6 +18,7 @@ const {
   mesErrNoApplicant404,
   mesErrConflict409,
   mesErrValidation400,
+  mesErrNoRiding404,
 } = require('../utils/messageServer');
 
 module.exports.getDepartures = (req, res, next) => {
@@ -95,23 +96,27 @@ module.exports.createDeparture = (req, res, next) => {
                     return team;
                   }
                   messageMongo = mes[0]
+                  console.log(messageMongo)
                   return messageMongo;
                 })
                 .then((messageMongo) => {
                   // создание вызова
                   Departure.find({})
                     .then((departures) => {
+                      console.log(departures)
                       return departures.length <= 0 ? 0 : departures[departures.length - 1].countDeparture
                     })
                     .then((numberLastDeparture) => {
                       Departure.create({
                         countDeparture: numberLastDeparture + 1,
+                        messageDeparture: messageMongo._id !== '' ? messageMongo._id : undefined,
+                        isDeletedDeparture: false,
                         content: [{
                           // date: dateUnix,
                           dateActually: Date.now(),
                           team: groupIdMongo !== '' ? groupIdMongo : undefined,
                           arw,
-                          message: messageMongo._id !== '' ? messageMongo._id : undefined,
+                          message: Number(message.split(' ')[0]),
                           landmark,
                           applicant: aplicantIdMongo !== '' ? aplicantIdMongo : undefined,
                           victim: victimArrIdMongo.length > 0 ? victimArrIdMongo : undefined,
@@ -188,13 +193,15 @@ module.exports.fixDeparture = (req, res, next) => {
   } = req.body;
   // console.log(req.body);
   const dateUnix = (date, time) => Math.floor(new Date(`${date}, ${time}`).getTime());
-
   // const dateUnix = Math.floor(new Date(`${date}, ${time}`).getTime());
 
   let victimArrIdMongo = [];
   let aplicantIdMongo = '';
   let groupIdMongo = '';
-  let messageIdMongo = '';
+  let messageIdMongoNew = '';
+  let messageMongoNew = {};
+  let messageMongoIdOld = '';
+  let messageMongoOld = {};
 
   Victim.find({})
     .then((victims) => {
@@ -230,7 +237,7 @@ module.exports.fixDeparture = (req, res, next) => {
           if (appl.length === 0) {
             return applicant;
           }
-          aplicantIdMongo = appl[0]._id
+          aplicantIdMongo = appl[0]._id;
           return aplicantIdMongo;
         })
         .then((aplicantIdMongo) => {
@@ -238,7 +245,7 @@ module.exports.fixDeparture = (req, res, next) => {
             .then((gr) => {
               // console.log(aplicantIdMongo)
               if (gr.length === 0) {
-                return team;
+                return;
               }
               groupIdMongo = gr[0]._id
               return groupIdMongo;
@@ -248,19 +255,20 @@ module.exports.fixDeparture = (req, res, next) => {
                 .then((mes) => {
                   // console.log(groupIdMongo)
                   if (mes.length === 0) {
-                    return team;
+                    return;
                   }
-                  messageIdMongo = mes[0]._id;
-                  return messageIdMongo;
+                  messageIdMongoNew = mes[0]._id;
+                  messageMongoNew = mes[0]
+                  return messageIdMongoNew;
                 })
-                .then((messageIdMongo) => {
+                .then((messageIdMongoNew) => {
                   // console.log(messageIdMongo)
                   // изменение сообщения
                   const newDeparture = {
                     dateActually: Date.now(),
                     team: groupIdMongo !== '' ? groupIdMongo : undefined,
                     arw,
-                    message: messageIdMongo !== '' ? messageIdMongo : undefined,
+                    message: Number(message.split(' ')[0]),
                     landmark,
                     applicant: aplicantIdMongo !== '' ? aplicantIdMongo : undefined,
                     victim: victimArrIdMongo.length > 0 ? victimArrIdMongo : undefined,
@@ -278,7 +286,7 @@ module.exports.fixDeparture = (req, res, next) => {
                     note, psd,
                     nameUser: req.user._id
                   };
-                  console.log(newDeparture)
+                  // console.log(newDeparture)
                   Departure.findById(
                     req.params.id,
                     // {content: [newMessage]},
@@ -286,22 +294,73 @@ module.exports.fixDeparture = (req, res, next) => {
                     // { new: true, runValidators: true }
                   )
                     .then((departure) => {
-                      console.log(departure)
+                      // console.log(departure);
+                      messageMongoIdOld = departure.messageDeparture
                       if (departure === null) {
-                        throw new NoDate_404(mesErrNoMessage404);
+                        throw new NoDate_404(mesErrNoRiding404);
                       }
                       departure.updateOne(
-                        { $push: { content: newDeparture }},
+                        {
+                          $set: { messageDeparture: messageIdMongoNew },
+                          $push: { content: newDeparture }
+                        },
                         { new: true, runValidators: true }
                       )
                         .then((departureNew) => {
-                          console.log(departureNew)
+                          // console.log(departureNew)
                           if (departureNew.acknowledged === true && departureNew.modifiedCount > 0) {
-                            res.send(departure)
+                            if (messageIdMongoNew !== messageMongoIdOld) {
+                              Message.findById(messageMongoIdOld)
+                                .then((mesOld) => {
+                                  mesOld.updateOne(
+                                    {$set: {isCreateDeparture: false}},
+                                    { new: true, runValidators: true }
+                                  )
+                                    .then((mesOldFix) => {
+                                      if (mesOldFix.acknowledged === true && mesOldFix.modifiedCount > 0) {
+                                        messageMongoNew.updateOne(
+                                          {$set: {isCreateDeparture: true}},
+                                          { new: true, runValidators: true }
+                                        )
+                                          .then((mesNewFix) => {
+                                            if (mesNewFix.acknowledged === true && mesNewFix.modifiedCount > 0) {
+                                              res.send(departure)
+                                            } else {
+                                              throw new NoDate_404(mesErrFixUpdateMessage404);
+                                            }
+                                          })
+                                      } else {
+                                        throw new NoDate_404(mesErrFixUpdateMessage404);
+                                      }
+                                    })
+                                })
+                            } else {
+                              res.send(departure);
+                            }
+                            // res.send(departure)
                           } else {
                             throw new NoDate_404(mesErrFixUpdateMessage404);
                           }
                         })
+                        .catch((err) => {
+                          console.log(err);
+                          if (err.name === 'CastError') {
+                            next(new IncorrectData_400(mesErrIdMessage400));
+                            return;
+                          }
+                          if (err.name === 'TypeError') {
+                            next(new NoDate_404(mesErrFixUpdateMessage404));
+                            return;
+                          }
+                          if (err.name === 'ValidationError') {
+                            return next(new IncorrectData_400(mesErrValidationMessage400));
+                          }
+                          if (err.code === 11000) {
+                            next(new ConflictData_409(mesErrConflict409));
+                            return;
+                          }
+                          next(err);
+                        });
                       // res.send(message)
                     })
                     .catch((err) => {

@@ -7,6 +7,10 @@ const messageSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  isDeletedMessage: {
+    type: Boolean,
+    required: true
+  },
   content: [
     {
       date: {

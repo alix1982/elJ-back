@@ -65,6 +65,7 @@ module.exports.createVictim = (req, res, next) => {
       // console.log(numberLastGroup);
       Victim.create({
         countVictim: numberLastVictim + 1,
+        isDeletedVictim: false,
         content: [{
           dateActually: Date.now(),
           lastname, firstname, patronymic,

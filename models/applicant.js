@@ -7,6 +7,10 @@ const applicantSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  isDeletedApplicant: {
+    type: Boolean,
+    required: true
+  },
   content: [
     {
       dateActually: {
@@ -23,17 +27,18 @@ const applicantSchema = new mongoose.Schema({
       patronymic: {
         type: String,
       },
-
-      blackList: {
-        type: Boolean,
-      },
+      // blackList: {
+      //   type: Boolean,
+      // },
       reasonBlackList: {
         type: String,
       },
       infoBlackList: {
         type: String,
       },
-
+      city: {
+        type: String,
+      },
       street: {
         type: String,
       },
@@ -46,7 +51,6 @@ const applicantSchema = new mongoose.Schema({
       flat: {
         type: Number,
       },
-
       typeDocument: {
         type: String,
       },
@@ -62,7 +66,6 @@ const applicantSchema = new mongoose.Schema({
       dateIssue: {
         type: Number,
       },
-
       applicantDescription: {
         type: String,
       },
