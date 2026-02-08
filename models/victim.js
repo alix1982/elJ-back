@@ -33,9 +33,6 @@ const victimSchema = new mongoose.Schema({
       gender: {
         type: String,
       },
-      health: {
-        type: String,
-      },
       statusVictim: {
         type: String,
       },

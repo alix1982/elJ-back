@@ -38,9 +38,14 @@ const departureSchema = new mongoose.Schema({
       applicant: {
         type: mongoose.Schema.Types.ObjectId,
       },
-      victim: [
-        {type: mongoose.Schema.Types.ObjectId},
-      ],
+      victim: [{
+        idVictim: {
+          type: mongoose.Schema.Types.ObjectId
+        },
+        health: {
+          type: String,
+        },
+      }],
       address: {
         city: {
           type: String,
@@ -105,14 +110,6 @@ const departureSchema = new mongoose.Schema({
           // required: true,
         },
       },
-      // note: {
-      //   type: Boolean,
-      //   // required: true,
-      // },
-      // psd: {
-      //   type: Boolean,
-      //   // required: true,
-      // },
       reasonDelay: {
         type: String,
         // required: true,

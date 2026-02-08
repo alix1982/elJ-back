@@ -38,7 +38,7 @@ module.exports.createDeparture = (req, res, next) => {
     timeReceivingDeparture, dateReceivingDeparture, timeTransfer, dateTransfer,
     timeDeparture, dateDeparture, timeArrival, dateArrival, timeEnd, dateEnd, timeReturn, dateReturn,
     reasonDelay, reasonChallenge, natureChallenge, checkOutResult, elderPSG, textWorkDescription,
-    assistance, participation, note, psd
+    assistance, participation
   } = req.body;
 
   const dateUnix = (date, time) => Math.floor(new Date(`${date}, ${time}`).getTime());
@@ -60,14 +60,17 @@ module.exports.createDeparture = (req, res, next) => {
       victims.length > 0 &&
         victims.map((item) =>
           victim.map((el) =>
-            (el?.text ?
-              ((String(item.countVictim) === el?.text?.split(' ')[0]) &&
-                (victimArrIdMongo = [...victimArrIdMongo, item._id])
-              ) :
-              ((String(item.countVictim) === el.split(' ')[0]) &&
-                (victimArrIdMongo = [...victimArrIdMongo, item._id])
-              )
+            ((String(item.countVictim) === el.text.split(' ')[0]) &&
+              (victimArrIdMongo = [...victimArrIdMongo, {idVictim: item._id, health: el.health}])
             )
+            // (el?.text ?
+            //   ((String(item.countVictim) === el?.text?.split(' ')[0]) &&
+            //     (victimArrIdMongo = [...victimArrIdMongo, item._id])
+            //   ) :
+            //   ((String(item.countVictim) === el.split(' ')[0]) &&
+            //     (victimArrIdMongo = [...victimArrIdMongo, item._id])
+            //   )
+            // )
           )
         );
     })
@@ -96,14 +99,14 @@ module.exports.createDeparture = (req, res, next) => {
                     return team;
                   }
                   messageMongo = mes[0]
-                  console.log(messageMongo)
+                  // console.log(messageMongo)
                   return messageMongo;
                 })
                 .then((messageMongo) => {
                   // создание вызова
                   Departure.find({})
                     .then((departures) => {
-                      console.log(departures)
+                      // console.log(departures)
                       return departures.length <= 0 ? 0 : departures[departures.length - 1].countDeparture
                     })
                     .then((numberLastDeparture) => {
@@ -131,18 +134,17 @@ module.exports.createDeparture = (req, res, next) => {
                           },
                           reasonDelay, reasonChallenge, natureChallenge, checkOutResult, elderPSG, textWorkDescription,
                           assistance, participation,
-                          note, psd,
                           nameUser: req.user._id
                         }],
                       })
                         .then((departure) => {
-                          console.log(messageMongo)
+                          // console.log(messageMongo)
                           messageMongo.updateOne(
                             { $set: { isCreateDeparture: true }},
                             { new: true, runValidators: true }
                           )
                             .then((messageNew) => {
-                              console.log(messageNew)
+                              // console.log(messageNew)
                               if (messageNew.acknowledged === true
                                 // && messageNew.modifiedCount > 0
                               ) {
@@ -189,7 +191,7 @@ module.exports.fixDeparture = (req, res, next) => {
     timeReceivingDeparture, dateReceivingDeparture, timeTransfer, dateTransfer,
     timeDeparture, dateDeparture, timeArrival, dateArrival, timeEnd, dateEnd, timeReturn, dateReturn,
     reasonDelay, reasonChallenge, natureChallenge, checkOutResult, elderPSG, textWorkDescription,
-    assistance, participation, note, psd
+    assistance, participation
   } = req.body;
   // console.log(req.body);
   const dateUnix = (date, time) => Math.floor(new Date(`${date}, ${time}`).getTime());
@@ -219,14 +221,17 @@ module.exports.fixDeparture = (req, res, next) => {
       // console.log(victims[0].countVictim)
       victims.map((item) =>
         victim.map((el) =>
-          (el?.text ?
-            ((String(item.countVictim) === el?.text?.split(' ')[0]) &&
-              (victimArrIdMongo = [...victimArrIdMongo, item._id])
-            ) :
-            ((String(item.countVictim) === el.split(' ')[0]) &&
-              (victimArrIdMongo = [...victimArrIdMongo, item._id])
-            )
+          ((String(item.countVictim) === el.text.split(' ')[0]) &&
+            (victimArrIdMongo = [...victimArrIdMongo, {idVictim: item._id, health: el.health}])
           )
+          // (el?.text ?
+          //   ((String(item.countVictim) === el?.text?.split(' ')[0]) &&
+          //     (victimArrIdMongo = [...victimArrIdMongo, item._id])
+          //   ) :
+          //   ((String(item.countVictim) === el.split(' ')[0]) &&
+          //     (victimArrIdMongo = [...victimArrIdMongo, item._id])
+          //   )
+          // )
         )
       );
     })
@@ -283,7 +288,6 @@ module.exports.fixDeparture = (req, res, next) => {
                     },
                     reasonDelay, reasonChallenge, natureChallenge, checkOutResult, elderPSG, textWorkDescription,
                     assistance, participation,
-                    note, psd,
                     nameUser: req.user._id
                   };
                   // console.log(newDeparture)

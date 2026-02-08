@@ -72,7 +72,7 @@ module.exports.createApplicant = (req, res, next) => {
           // reasonBlackList: blackList ? reasonBlackList : '',
           // infoBlackList: blackList ? infoBlackList : '',
           typeDocument, seriesDocument, numberDocument, issued,
-          dateIssue: dateUnix(dateIssue),
+          dateIssue: dateIssue ? dateUnix(dateIssue) : null,
           applicantDescription,
           nameUser: req.user._id
         }],
@@ -122,7 +122,7 @@ module.exports.fixApplicant = (req, res, next) => {
     // reasonBlackList: blackList ? reasonBlackList : '',
     // infoBlackList: blackList ? infoBlackList : '',
     typeDocument, seriesDocument, numberDocument, issued,
-    dateIssue: dateIssue ? dateUnix(dateIssue) : 0,
+    dateIssue: dateIssue ? dateUnix(dateIssue) : null,
     applicantDescription,
     nameUser: req.user._id
   };

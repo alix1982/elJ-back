@@ -46,7 +46,7 @@ module.exports.getVictims = (req, res, next) => {
 module.exports.createVictim = (req, res, next) => {
   // console.log('1')
   const { lastname, firstname, patronymic,
-    birthYear, gender, health, statusVictim,
+    birthYear, gender, statusVictim,
     // blackList, reasonBlackList, infoBlackList,
     // typeDocument, seriesDocument, numberDocument, issued, dateIssue,
     victimDescription
@@ -69,8 +69,8 @@ module.exports.createVictim = (req, res, next) => {
         content: [{
           dateActually: Date.now(),
           lastname, firstname, patronymic,
-          birthYear: birthYear ? dateUnix(birthYear) : 0,
-          gender, health, statusVictim,
+          birthYear: birthYear ? dateUnix(birthYear) : null,
+          gender, statusVictim,
           // blackList,
           // reasonBlackList: blackList ? reasonBlackList : '',
           // infoBlackList: blackList ? infoBlackList : '',
@@ -106,12 +106,9 @@ module.exports.createVictim = (req, res, next) => {
 
 module.exports.fixVictim = (req, res, next) => {
   const { lastname, firstname, patronymic,
-    birthYear, gender, health, statusVictim,
-    // blackList, reasonBlackList, infoBlackList,
-    // typeDocument, seriesDocument, numberDocument, issued, dateIssue,
+    birthYear, gender, statusVictim,
     victimDescription
   } = req.body;
-  // console.log(req.body);
 
   const dateUnix = (date, time='00:00') => Math.floor(new Date(`${date}, ${time}`).getTime());
 
@@ -120,17 +117,11 @@ module.exports.fixVictim = (req, res, next) => {
   const newVictim = {
     dateActually: Date.now(),
     lastname, firstname, patronymic,
-    birthYear: birthYear ? dateUnix(birthYear) : 0,
-     gender, health, statusVictim,
-    // blackList,
-    // reasonBlackList: blackList ? reasonBlackList : '',
-    // infoBlackList: blackList ? infoBlackList : '',
-    // typeDocument, seriesDocument, numberDocument, issued,
-    // dateIssue: dateIssue ? dateUnix(dateIssue) : 0,
+    birthYear: birthYear ? dateUnix(birthYear) : null,
+    gender, statusVictim,
     victimDescription,
     nameUser: req.user._id
   };
-  // console.log(newMessage);
   Victim.findById(
     req.params.id,
     // {content: [newMessage]},
@@ -147,7 +138,6 @@ module.exports.fixVictim = (req, res, next) => {
         { new: true, runValidators: true }
       )
       .then((victimNew) => {
-        // console.log(messegeNew)
         if (victimNew.acknowledged === true && victimNew.modifiedCount > 0) {
           res.send(victimNew)
         } else {

@@ -144,7 +144,7 @@ module.exports.fixMessage = (req, res, next) => {
       .then((messegeNew) => {
         // console.log(messegeNew)
         if (messegeNew.acknowledged === true && messegeNew.modifiedCount > 0) {
-          res.send(messegeNew)
+          res.send(message)
         } else {
           throw new NoDate_404(mesErrFixUpdateMessage404);
         }
