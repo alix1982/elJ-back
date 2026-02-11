@@ -131,6 +131,16 @@ const messageSchema = new mongoose.Schema({
           default: 'consultation',
           required: true,
         },
+        redirection: {
+          type: String,
+          enum: [
+            '', 'пожарная охрана', 'полиция', 'скорая  помощь', 'ЕДДС', 'структура МЧС', 'ГИБДД',
+            'аварийная горгаза', 'аварийная ЖКХ', 'аварийная цех 19', 'аварийная горсвет',
+            'аварийная лифтов', 'аварийная теплосетей',
+            'прочие'
+          ],
+          default: '',
+        },
       },
       note: {
         type: Boolean,

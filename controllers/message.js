@@ -26,7 +26,7 @@ module.exports.createMessage = (req, res, next) => {
     date, time, receipts, phoneAON, phoneFeedback, text,
     criterion1, criterion2, criterion3, criterion4, criterion5, textBlackList,
     city, street, house, porch, corpus, floor, flat, intercomCode,
-    typeProcessingWhom, typeProcessingHow, note, psd, binding, nameUser
+    typeProcessingWhom, typeProcessingHow, redirection, note, psd, binding, nameUser
   } = req.body;
 
   // psychological/social/fire/emergencyTrees/chemistry
@@ -53,7 +53,7 @@ module.exports.createMessage = (req, res, next) => {
           note, psd, binding, nameUser,
           phone: {aon: phoneAON, feedback: phoneFeedback},
           address: {city, street, house, porch, corpus, floor, flat, intercomCode},
-          typeProcessing: {typeProcessingWhom, typeProcessingHow},
+          typeProcessing: {typeProcessingWhom, typeProcessingHow, redirection},
           nameUser: req.user._id
         }],
         isCreateDeparture: false
@@ -87,7 +87,7 @@ module.exports.fixMessage = (req, res, next) => {
     date, time, receipts, phoneAON, phoneFeedback, text,
     criterion1, criterion2, criterion3, criterion4, criterion5, textBlackList,
     city, street, house, porch, corpus, floor, flat, intercomCode,
-    typeProcessingWhom, typeProcessingHow, note, psd, binding, nameUser
+    typeProcessingWhom, typeProcessingHow, redirection, note, psd, binding, nameUser
   } = req.body;
 
   // psychological/social/fire/emergencyTrees/chemistry
@@ -121,7 +121,7 @@ module.exports.fixMessage = (req, res, next) => {
           flat: flat,
           intercomCode: intercomCode
         },
-        typeProcessing: {typeProcessingWhom: typeProcessingWhom, typeProcessingHow: typeProcessingHow},
+        typeProcessing: {typeProcessingWhom: typeProcessingWhom, typeProcessingHow: typeProcessingHow, redirection: redirection},
         // nameUser: 'ddd',
       };
 
