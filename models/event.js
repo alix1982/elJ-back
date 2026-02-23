@@ -27,7 +27,7 @@ const eventSchema = new mongoose.Schema({
       },
       descriptionEvent: {
         type: String,
-        required: true,
+        // required: true,
       },
       listMessage: [
         {type: mongoose.Schema.Types.ObjectId},

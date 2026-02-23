@@ -3,7 +3,7 @@ const router = require('express').Router();
 const { getEvents, createEvent, fixEvent, deleteEvent } = require('../controllers/event');
 const { validationRouterCreateProgramm, validationRouterDeleteProgramm } = require('../validations/validationRouter');
 
-router.get('/event', getEvents);
+router.get('/events', getEvents);
 
 router.post('/event', createEvent);
 

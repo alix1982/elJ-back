@@ -10,7 +10,7 @@ const { getGroups, createGroup, deleteGroup, getGroup, fixGroup } = require('../
 
 router.get('/groups', getGroups);
 
-router.get('/group/:_id', validationRouterGroupUserData, getGroup);
+// router.get('/group/:_id', validationRouterGroupUserData, getGroup);
 
 router.post('/group', createGroup);
 

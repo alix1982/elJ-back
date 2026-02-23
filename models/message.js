@@ -150,10 +150,10 @@ const messageSchema = new mongoose.Schema({
         type: Boolean,
         // required: true,
       },
-      binding: {
-        type: String,
-        // required: true,
-      },
+      // binding: {
+      //   type: String,
+      //   // required: true,
+      // },
       nameUser: {
         type: String,
         required: true,

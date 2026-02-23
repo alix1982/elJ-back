@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { getMessages, createMessage, fixMessage } = require('../controllers/message');
 const { validationRouterUpdateProgramm } = require('../validations/validationRouter');
 
-router.get('/message', getMessages);
+router.get('/messages', getMessages);
 
 router.post('/message/createMessage', createMessage);
 

@@ -192,64 +192,64 @@ module.exports.fixGroup = (req, res, next) => {
     });
 };
 
-module.exports.getGroup = (req, res, next) => {
-  let usersSortSnils = []; // массив со снилсами пользователей и статусом прохождения программы
-  let questionnaireSortGroup = []; // массив со анкетными данными пользователей и статусом прохождения программы
-  User.find({})
-    .then((users) => {
-      if (users === null) {
-        throw new NoDate_404(mesErrNoUsers404);
-      }
-      // формирование массива со снилсами пользователей и статусом прохождения программы (по результатам итогового теста)
-      users.map((user) =>
-        user.education.map(
-          (usEd) =>
-            String(usEd.group) === String(req.params._id) &&
-            (usersSortSnils = [...usersSortSnils, { snils: user.snils, test: usEd.programm.finallyTest.passed }])
-        )
-      );
-      if (usersSortSnils.length === 0) {
-        throw new NoDate_404(mesErrNoUsersInGroup404);
-      } else {
-        return usersSortSnils;
-      }
-    })
-    .then((usersSortSnils) => {
-      usersSortSnils.map((userSnils) => {
-        // поиск анкетных данных пользователей по снилсам для ответа на запрос
-        Questionnaire.find({ snils: userSnils.snils })
-          .then((questionnaireUser) => {
-            if (questionnaireUser === null) {
-              throw new NoDate_404(mesErrNoQuestionnaire404);
-            }
-            return (questionnaireSortGroup = [
-              ...questionnaireSortGroup,
-              { questionnaire: questionnaireUser[0], test: userSnils.test },
-            ]);
-          })
-          .then((questionnaireSortGroup) => {
-            if (questionnaireSortGroup.length === usersSortSnils.length) {
-              res.send(questionnaireSortGroup);
-            }
-          })
-          .catch((err) => {
-            console.log(err.name);
-            if (err.name === 'CastError') {
-              next(new IncorrectData_400(mesErrIdQuestionnaire400));
-              return;
-            }
-            if (err.name === 'ValidationError') {
-              return next(new IncorrectData_400(mesErrValidationQuestionnaire400));
-            }
-            if (err.code === 11000) {
-              return next(new ConflictData_409(mesErrConflictQuestionnaire409));
-            }
-            next(err);
-          });
-      });
-    })
-    .catch(next);
-};
+// module.exports.getGroup = (req, res, next) => {
+//   let usersSortSnils = []; // массив со снилсами пользователей и статусом прохождения программы
+//   let questionnaireSortGroup = []; // массив со анкетными данными пользователей и статусом прохождения программы
+//   User.find({})
+//     .then((users) => {
+//       if (users === null) {
+//         throw new NoDate_404(mesErrNoUsers404);
+//       }
+//       // формирование массива со снилсами пользователей и статусом прохождения программы (по результатам итогового теста)
+//       users.map((user) =>
+//         user.education.map(
+//           (usEd) =>
+//             String(usEd.group) === String(req.params._id) &&
+//             (usersSortSnils = [...usersSortSnils, { snils: user.snils, test: usEd.programm.finallyTest.passed }])
+//         )
+//       );
+//       if (usersSortSnils.length === 0) {
+//         throw new NoDate_404(mesErrNoUsersInGroup404);
+//       } else {
+//         return usersSortSnils;
+//       }
+//     })
+//     .then((usersSortSnils) => {
+//       usersSortSnils.map((userSnils) => {
+//         // поиск анкетных данных пользователей по снилсам для ответа на запрос
+//         Questionnaire.find({ snils: userSnils.snils })
+//           .then((questionnaireUser) => {
+//             if (questionnaireUser === null) {
+//               throw new NoDate_404(mesErrNoQuestionnaire404);
+//             }
+//             return (questionnaireSortGroup = [
+//               ...questionnaireSortGroup,
+//               { questionnaire: questionnaireUser[0], test: userSnils.test },
+//             ]);
+//           })
+//           .then((questionnaireSortGroup) => {
+//             if (questionnaireSortGroup.length === usersSortSnils.length) {
+//               res.send(questionnaireSortGroup);
+//             }
+//           })
+//           .catch((err) => {
+//             console.log(err.name);
+//             if (err.name === 'CastError') {
+//               next(new IncorrectData_400(mesErrIdQuestionnaire400));
+//               return;
+//             }
+//             if (err.name === 'ValidationError') {
+//               return next(new IncorrectData_400(mesErrValidationQuestionnaire400));
+//             }
+//             if (err.code === 11000) {
+//               return next(new ConflictData_409(mesErrConflictQuestionnaire409));
+//             }
+//             next(err);
+//           });
+//       });
+//     })
+//     .catch(next);
+// };
 
 module.exports.deleteGroup = (req, res, next) => {
   Group.findById(req.params._id)

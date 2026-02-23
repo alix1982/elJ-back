@@ -26,7 +26,7 @@ module.exports.createMessage = (req, res, next) => {
     date, time, receipts, phoneAON, phoneFeedback, text,
     criterion1, criterion2, criterion3, criterion4, criterion5, textBlackList,
     city, street, house, porch, corpus, floor, flat, intercomCode,
-    typeProcessingWhom, typeProcessingHow, redirection, note, psd, binding, nameUser
+    typeProcessingWhom, typeProcessingHow, redirection, note, psd, nameUser
   } = req.body;
 
   // psychological/social/fire/emergencyTrees/chemistry
@@ -50,7 +50,7 @@ module.exports.createMessage = (req, res, next) => {
           receipts, text,
           typeMessage: {criterion1: criterion1, criterion2: criterion2, criterion3: criterion3, criterion4: criterion4, criterion5: criterion5},
           textBlackList,
-          note, psd, binding, nameUser,
+          note, psd, nameUser,
           phone: {aon: phoneAON, feedback: phoneFeedback},
           address: {city, street, house, porch, corpus, floor, flat, intercomCode},
           typeProcessing: {typeProcessingWhom, typeProcessingHow, redirection},
@@ -87,7 +87,7 @@ module.exports.fixMessage = (req, res, next) => {
     date, time, receipts, phoneAON, phoneFeedback, text,
     criterion1, criterion2, criterion3, criterion4, criterion5, textBlackList,
     city, street, house, porch, corpus, floor, flat, intercomCode,
-    typeProcessingWhom, typeProcessingHow, redirection, note, psd, binding, nameUser
+    typeProcessingWhom, typeProcessingHow, redirection, note, psd, nameUser
   } = req.body;
 
   // psychological/social/fire/emergencyTrees/chemistry
@@ -108,7 +108,7 @@ module.exports.fixMessage = (req, res, next) => {
         // textBlackList,
         note: note,
         psd: psd,
-        binding: binding,
+        // binding: binding,
         nameUser: req.user._id,
         phone: {aon: phoneAON, feedback: phoneFeedback},
         address: {
