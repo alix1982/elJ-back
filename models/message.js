@@ -22,12 +22,12 @@ const messageSchema = new mongoose.Schema({
         required: true,
       },
       // receipts - incoming/outgoing
-      receipts: {
-        type: String,
-        enum: ['incoming', 'outgoing'],
-        default: 'incoming',
-        required: true,
-      },
+      // receipts: {
+      //   type: String,
+      //   enum: ['incoming', 'outgoing'],
+      //   default: 'incoming',
+      //   required: true,
+      // },
       phone: {
         aon: {
             type: String,
@@ -120,16 +120,16 @@ const messageSchema = new mongoose.Schema({
         // population/services/organizations
         typeProcessingWhom: {
           type: String,
-          enum: ['population', 'services', 'organizations'],
+          enum: ['population', 'services', 'organizations', 'outgoing'],
           default: 'population',
           required: true,
         },
         // consultation/reference/redirection/challenge/rejection
         typeProcessingHow: {
           type: String,
-          enum: ['consultation', 'reference','redirection', 'challenge','rejection'],
-          default: 'consultation',
-          required: true,
+          enum: ['', 'consultation', 'reference','redirection', 'challenge','rejection'],
+          default: '',
+          // required: true,
         },
         redirection: {
           type: String,

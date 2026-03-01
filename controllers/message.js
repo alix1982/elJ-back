@@ -23,7 +23,7 @@ module.exports.getMessages = (req, res, next) => {
 
 module.exports.createMessage = (req, res, next) => {
   const {
-    date, time, receipts, phoneAON, phoneFeedback, text,
+    date, time, phoneAON, phoneFeedback, text,
     criterion1, criterion2, criterion3, criterion4, criterion5, textBlackList,
     city, street, house, porch, corpus, floor, flat, intercomCode,
     typeProcessingWhom, typeProcessingHow, redirection, note, psd, nameUser
@@ -47,7 +47,7 @@ module.exports.createMessage = (req, res, next) => {
         content: [{
           date: dateUnix,
           dateActually: Date.now(),
-          receipts, text,
+          text,
           typeMessage: {criterion1: criterion1, criterion2: criterion2, criterion3: criterion3, criterion4: criterion4, criterion5: criterion5},
           textBlackList,
           note, psd, nameUser,
